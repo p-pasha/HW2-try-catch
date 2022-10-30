@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>HW2-try-catch</title>
+</head>
+
+<body>
+  <script>
+    /*
+   Конструкція `try...catch` використовується для `вузьких місць`,
+   найчастіше при запитах до бази даних на сервері,
+   відповідь якого від нас не залежить.
+   */
+    const books = [
+      {
+        author: "Люсі Фолі",
+        name: "Список запрошених",
+        price: 70
+      },
+      {
+        author: "Сюзанна Кларк",
+        name: "Джонатан Стрейндж і м-р Норрелл",
+      },
+      {
+        name: "Дизайн. Книга для недизайнерів.",
+        price: 70
+      },
+      {
+        author: "Алан Мур",
+        name: "Неономікон",
+        price: 70
+      },
+      {
+        author: "Террі Пратчетт",
+        name: "Рухомі картинки",
+        price: 40
+      },
+      {
+        author: "Анґус Гайленд",
+        name: "Коти в мистецтві",
+      }
+    ];
+
+    let i = 0;
+    // Класи для помилок
+    class CustomErrorAuthor extends Error {
+      constructor(num) {
+        super();
+        this.name = "Custom error";
+        this.message = `Element{${num}} of Arry [books] don't have "author"`;
+      }
+    }
+    class CustomErrorName extends Error {
+      constructor(num) {
+        super();
+        this.name = "Custom error";
+        this.message = `Element{${num}} of Arry [books] don't have "name"`;
+      }
+    }
+    class CustomErrorPrice extends Error {
+      constructor(num) {
+        super();
+        this.name = "Custom error";
+        this.message = `Element{${num}} of Arry [books] don't have "price"`;
+      }
+    }
+    // Функція валідації об'єктів масивуі books
+    function validateObject(el, num) {
+      if (el.author === undefined) {
+        throw new CustomErrorAuthor(num);
+      } else if (el.name === undefined) {
+        throw new CustomErrorName(num);
+      } else if (el.price === undefined) {
+        throw new CustomErrorPrice(num);
+      } else {
+        return true;
+      }
+    }
+
+    const content = books
+      .map((element) => {
+        try {
+          if (validateObject(element, i++)) {
+            return `<li>${element.author},
+                      	<span style="color: #1a55cc">${element.name}</span>,
+                      	${element.price}UH.</li>`;
+          }
+        } catch (err) {
+          console.log(`${err.name}: ${err.message}`);
+        }
+      })
+      .join("");
+
+    const pearentElement = document.createElement("div");
+    pearentElement.id = "root";
+    document.body.prepend(pearentElement);
+    const newUl = document.createElement("ul");
+    newUl.innerHTML = content;
+    pearentElement.prepend(newUl);
+  </script>
+</body>
+
+</html>
